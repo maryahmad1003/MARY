@@ -1,7 +1,7 @@
 const app = document.getElementById('app');
 const contacts = [];
 const groups = [];
-const archivedContacts = []; // Tableau pour les contacts archivés
+const archivedContacts = [];
 
 function loadFromLocalStorage() {
   const storedContacts = localStorage.getItem('contacts');
@@ -201,10 +201,10 @@ function displayContacts(searchTerm = '') {
   `;
 
   const contactsList = document.getElementById('contactsList');
-  contactsList.scrollTop = contactsList.scrollHeight; // Définit la position de défilement au bas
+  contactsList.scrollTop = contactsList.scrollHeight; 
 }
 
-// Fonction pour afficher les groupes
+
 function displayGroups() {
   const discussionsContainer = document.querySelector('#discussionsContainer');
   const container = discussionsContainer.querySelector('div');
@@ -236,13 +236,11 @@ function displayGroups() {
     </div>
   `;
 
-  // Ajouter un gestionnaire d'événement pour le bouton "Créer un groupe"
   document.getElementById('createGroupButton').addEventListener('click', () => {
     openCreateGroupForm();
   });
 }
 
-// Ajouter un gestionnaire d'événement pour le bouton "Groupes"
 document.getElementById('groupsButton').addEventListener('click', () => {
   displayGroups();
 });
@@ -278,11 +276,9 @@ function createGroup() {
         return;
       }
 
-      // Définir "Mary Vonne Diallo" comme administratrice par défaut
       let admin = contacts.find(contact => contact.name === 'Mary Vonne Diallo');
       if (!admin) {
-        // Ajouter "Mary Vonne Diallo" aux contacts si elle n'existe pas
-        admin = { name: 'Mary Vonne Diallo', phone: '123456789' }; // Numéro par défaut
+        admin = { name: 'Mary Vonne Diallo', phone: '123456789' }; 
         contacts.push(admin);
         saveToLocalStorage();
       }
@@ -347,8 +343,8 @@ function confirmAddMembers(groupName) {
     }
   });
 
-  saveToLocalStorage(); // Sauvegarder les modifications
-  showGroupDetails(groupName); // Afficher les détails du groupe mis à jour
+  saveToLocalStorage(); 
+  showGroupDetails(groupName); 
 }
 
 function addMemberToGroup(groupName, memberName) {
@@ -384,7 +380,6 @@ document.getElementById('groupsButton').addEventListener('click', () => {
   displayGroups();
 });
 
-// Fonction pour afficher la zone de texte pour écrire un message de diffusion
 function displayBroadcastMessageInput() {
   const discussionsContainer = document.querySelector('#discussionsContainer');
   const container = discussionsContainer.querySelector('div');
@@ -401,7 +396,6 @@ function displayBroadcastMessageInput() {
     </button>
   `;
 
-  // Ajouter un gestionnaire d'événement pour le bouton "Envoyer"
   document.getElementById('showContactsButton').addEventListener('click', () => {
     const message = document.getElementById('broadcastMessage').value.trim();
     if (message) {
@@ -412,7 +406,6 @@ function displayBroadcastMessageInput() {
   });
 }
 
-// Fonction pour afficher les contacts avec des cases à cocher pour la diffusion
 function displayBroadcastContacts(message) {
   const discussionsContainer = document.querySelector('#discussionsContainer');
   const container = discussionsContainer.querySelector('div');
@@ -432,16 +425,13 @@ function displayBroadcastContacts(message) {
     </button>
   `;
 
-  // Ajouter un gestionnaire d'événement pour le bouton "Envoyer la diffusion"
   document.getElementById('sendBroadcastButton').addEventListener('click', () => {
     const selectedContacts = Array.from(document.querySelectorAll('.broadcast-checkbox:checked'))
       .map(checkbox => checkbox.value);
 
     if (selectedContacts.length > 0) {
       alert(`Message envoyé : "${message}"\nAux contacts : ${selectedContacts.join(', ')}`);
-      // Ajoutez ici la logique pour envoyer le message aux contacts sélectionnés
 
-      // Décocher toutes les cases après l'envoi
       document.querySelectorAll('.broadcast-checkbox').forEach(checkbox => {
         checkbox.checked = false;
       });
@@ -451,12 +441,10 @@ function displayBroadcastContacts(message) {
   });
 }
 
-// Ajouter un gestionnaire d'événement pour le bouton "Diffusions"
 document.getElementById('broadcastButton').addEventListener('click', () => {
   displayBroadcastMessageInput();
 });
 
-// Fonction pour afficher les messages d'un groupe
 function displayGroupMessages(groupName) {
   const group = groups.find(g => g.name === groupName);
   if (!group) {
@@ -467,7 +455,6 @@ function displayGroupMessages(groupName) {
   const messagesContainer = document.createElement('div');
   messagesContainer.className = 'absolute top-[60px] bottom-[80px] left-0 right-0 overflow-y-auto px-4 py-2';
 
-  // Générer les messages du groupe
   messagesContainer.innerHTML = `
     ${group.messages && group.messages.length > 0 ? group.messages.map(message => `
       <div class="flex ${message.sender === 'Me' ? 'justify-end' : 'justify-start'} mb-2">
@@ -482,7 +469,6 @@ function displayGroupMessages(groupName) {
 
   const mainContent = document.getElementById('mainContent');
 
-  // Mettre à jour uniquement le nom du groupe et les messages
   mainContent.querySelector('.absolute.top-2.left-2 span').textContent = group.name;
   const existingMessagesContainer = mainContent.querySelector('.absolute.top-[60px].bottom-[80px]');
   if (existingMessagesContainer) {
@@ -490,7 +476,6 @@ function displayGroupMessages(groupName) {
   }
   mainContent.appendChild(messagesContainer);
 
-  // Ajouter le champ de saisie et le bouton d'envoi
   const inputSection = mainContent.querySelector('.absolute.bottom-4.right-4');
   inputSection.innerHTML = `
     <input 
@@ -504,7 +489,6 @@ function displayGroupMessages(groupName) {
     </button>
   `;
 
-  // Ajouter un gestionnaire d'événement pour envoyer un message
   document.getElementById('sendGroupMessageButton').addEventListener('click', () => {
     const input = document.getElementById('groupMessageInput');
     const messageText = input.value.trim();
@@ -514,15 +498,14 @@ function displayGroupMessages(groupName) {
         text: messageText,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
-      group.messages.push(newMessage); // Ajouter le message au groupe
-      saveToLocalStorage(); // Sauvegarder dans le localStorage
-      input.value = ''; // Réinitialiser le champ de saisie
-      displayGroupMessages(groupName); // Rafraîchir les messages
+      group.messages.push(newMessage); 
+      saveToLocalStorage(); 
+      input.value = ''; 
+      displayGroupMessages(groupName);
     }
   });
 }
 
-// Fonction pour afficher les messages
 function displayMessages() {
   const discussionsContainer = document.querySelector('#discussionsContainer');
   const container = discussionsContainer.querySelector('div');
@@ -551,11 +534,9 @@ function displayMessages() {
     </div>
   `;
 
-  // Ajouter un gestionnaire d'événement pour sélectionner les messages
   const messageItems = container.querySelectorAll('li[data-contact-name]');
   messageItems.forEach(item => {
     item.addEventListener('click', () => {
-      // Ajouter ou retirer la classe "hidden" pour afficher ou masquer l'icône
       const selectedIcon = item.querySelector('.selected-icon');
       if (selectedIcon.classList.contains('hidden')) {
         selectedIcon.classList.remove('hidden');
@@ -591,9 +572,8 @@ function generateUniqueName(name) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Ajouter "Mary Vonne Diallo" aux contacts si elle n'existe pas
   if (!contacts.some(contact => contact.name === 'Mary Vonne Diallo')) {
-    contacts.push({ name: 'Mary Vonne Diallo', phone: '123456789' }); // Numéro par défaut
+    contacts.push({ name: 'Mary Vonne Diallo', phone: '123456789' }); 
     saveToLocalStorage();
   }
 
@@ -601,7 +581,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Bouton "Fermer"
   document.getElementById('closeButton').addEventListener('click', () => {
     alert('Action : Fermer');
   });
@@ -611,12 +590,10 @@ document.addEventListener('DOMContentLoaded', () => {
   //   alert('Action : Archiver');
   // });
 
-  // Bouton "Bloquer"
   document.getElementById('blockButton').addEventListener('click', () => {
     alert('Action : Bloquer');
   });
 
-  // Bouton "Supprimer"
   document.getElementById('deleteButton').addEventListener('click', () => {
     const confirmation = confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');
     if (confirmation) {
@@ -625,45 +602,39 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Fonction pour archiver un contact
 function archiveContact(contactName) {
   const contactIndex = contacts.findIndex(contact => contact.name === contactName);
   if (contactIndex !== -1) {
-    const [archivedContact] = contacts.splice(contactIndex, 1); // Retirer le contact des contacts
-    archivedContacts.push(archivedContact); // Ajouter le contact aux contacts archivés
-    saveToLocalStorage(); // Sauvegarder les modifications dans le localStorage
+    const [archivedContact] = contacts.splice(contactIndex, 1); 
+    archivedContacts.push(archivedContact);
+    saveToLocalStorage(); 
     alert(`${contactName} a été archivé.`);
-    displayMessages(); // Rafraîchir la liste des messages
+    displayMessages(); 
   }
 }
 
-// Fonction pour archiver les messages sélectionnés
 function archiveSelectedMessages() {
-  // Récupérer tous les messages sélectionnés (avec l'icône "✔" visible)
   const selectedMessages = document.querySelectorAll('li[data-contact-name] .selected-icon:not(.hidden)');
   const selectedContacts = Array.from(selectedMessages).map(icon => {
     const parentLi = icon.closest('li[data-contact-name]');
     return parentLi.dataset.contactName;
   });
 
-  // Déplacer les messages sélectionnés vers les archives ou les désarchiver
   selectedContacts.forEach(contactName => {
     const contactIndex = contacts.findIndex(contact => contact.name === contactName);
     const archivedIndex = archivedContacts.findIndex(contact => contact.name === contactName);
 
     if (contactIndex !== -1) {
-      // Archiver le contact
       const [archivedContact] = contacts.splice(contactIndex, 1);
       archivedContacts.push(archivedContact);
     } else if (archivedIndex !== -1) {
-      // Désarchiver le contact
       const [restoredContact] = archivedContacts.splice(archivedIndex, 1);
       contacts.push(restoredContact);
     }
   });
 
-  saveToLocalStorage(); // Sauvegarder les modifications dans le localStorage
-  displayMessages(); // Rafraîchir la liste des messages
+  saveToLocalStorage(); 
+  displayMessages(); 
   alert('Action effectuée : messages archivés ou désarchivés.');
 }
 
@@ -671,7 +642,6 @@ document.getElementById('messagesButton').addEventListener('click', () => {
   displayMessages();
 });
 
-// Fonction pour afficher les contacts archivés
 function displayArchivedContacts() {
   const discussionsContainer = document.querySelector('#discussionsContainer');
   const container = discussionsContainer.querySelector('div');
@@ -700,27 +670,22 @@ function displayArchivedContacts() {
   `;
 }
 
-// Ajouter un gestionnaire d'événement pour le bouton "Archives"
 document.getElementById('archiveButton').addEventListener('click', () => {
-  displayArchivedContacts(); // Afficher directement les messages archivés sans afficher d'alerte
+  displayArchivedContacts(); 
 });
 
-const buttons = document.querySelectorAll('.w-20'); // Sélectionner tous les boutons de la barre latérale
+const buttons = document.querySelectorAll('.w-20'); 
 
 buttons.forEach(button => {
   button.addEventListener('click', () => {
-    // Supprimer la classe active de tous les boutons
     buttons.forEach(btn => btn.classList.remove('bg-[#F5C16C]', 'border-[#E0B05A]'));
 
-    // Ajouter la classe active au bouton cliqué
     button.classList.add('bg-[#F5C16C]', 'border-[#E0B05A]');
   });
 });
 
-// Supprimer la couleur active par défaut du bouton "Nouveau"
 document.getElementById('addContactButton').classList.remove('bg-[#F5C16C]', 'border-[#E0B05A]');
 
-// Fonction pour afficher les options d'un groupe
 function showGroupOptions(groupName) {
   const group = groups.find(g => g.name === groupName);
   if (!group) return;
@@ -737,7 +702,6 @@ function showGroupOptions(groupName) {
   `;
 }
 
-// Fonction pour afficher les détails d'un groupe
 function showGroupDetails(groupName) {
   const group = groups.find(g => g.name === groupName);
   if (!group) return;
@@ -767,7 +731,6 @@ function showGroupDetails(groupName) {
   `;
 }
 
-// Fonction pour ouvrir le formulaire de création de groupe
 function openCreateGroupForm() {
   const discussionsContainer = document.querySelector('#discussionsContainer');
   const container = discussionsContainer.querySelector('div');
@@ -795,7 +758,6 @@ function openCreateGroupForm() {
     </div>
   `;
 
-  // Gestionnaire d'événement pour soumettre le formulaire
   document.getElementById('createGroupForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const groupName = document.getElementById('groupNameInput').value.trim();
@@ -803,7 +765,6 @@ function openCreateGroupForm() {
     createGroupWithDetails(groupName, groupDescription);
   });
 
-  // Gestionnaire d'événement pour annuler
   document.getElementById('cancelCreateGroup').addEventListener('click', () => {
     displayGroups();
   });
